@@ -20,16 +20,23 @@
 8. Добавьте обработчик для переключения фильтров. При их переключении удаляйте все ранее созданные фильмы
  и добавляйте случайное количество новых.*/
 
-
+const filtersContainer = document.querySelector(`.main-navigation`);
 const CardsContainer = document.querySelector(`.films`);
 const mainCardsContainer = CardsContainer.querySelector(`.films-list__container`);
 
 const mostRated = CardsContainer.children[1].querySelector(`.films-list__container`);
 const mostCommented = CardsContainer.children[2].querySelector(`.films-list__container`);
 
+const ENTER_KEYCODE = 13;
+
 const FilterInterval = {
-  MIN: 0,
+  MIN: 3,
   MAX: 20
+};
+
+const CardsInterval = {
+  MIN: 1,
+  MAX: 10
 };
 
 const CardsNumber = {
@@ -63,7 +70,6 @@ const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)
  * @param {number} number
  * @return {DocumentFragment}
  */
-
 const createFilter = (name, number) => {
   const filter = document.querySelector(`#filter-template`).content.cloneNode(true);
   const fragment = document.createDocumentFragment();
@@ -138,8 +144,46 @@ const renderFilters = (items) => {
   items.forEach((item) => {
     fragment.appendChild(createFilter(item, getRandomNumber(FilterInterval.MIN, FilterInterval.MAX)));
   });
-  document.querySelector(`.main-navigation`).appendChild(fragment);
+  filtersContainer.appendChild(fragment);
 };
+
+/**
+ * toggles checked filter
+ * @param {MouseEvent} evt
+ */
+const toggleFilter = (evt) => {
+  filtersContainer.querySelector(`.main-navigation__item--active`).className = `main-navigation__item`;
+  evt.target.className = `main-navigation__item main-navigation__item--active`;
+};
+
+/**
+ * creates a random number of cards
+ */
+const refreshCards = () => {
+  mainCardsContainer.innerHTML = ``;
+  mostRated.innerHTML = ``;
+  mostCommented.innerHTML = ``;
+  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mainCardsContainer, true);
+  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mostRated, false);
+  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mostCommented, false);
+};
+
+const onFilterClick = (evt) => {
+  evt.preventDefault();
+  toggleFilter(evt);
+  refreshCards();
+};
+
+const onFilterPress = (evt) => {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    evt.preventDefault();
+    toggleFilter(evt);
+    refreshCards();
+  }
+};
+
+filtersContainer.addEventListener(`click`, onFilterClick);
+filtersContainer.addEventListener(`keypress`, onFilterPress);
 
 renderFilters(FILTERS_NAMES);
 renderCards(CardsNumber.MAIN, mainCardsContainer, true);
