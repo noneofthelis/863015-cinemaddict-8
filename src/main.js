@@ -24,6 +24,16 @@ const CardsNumber = {
   EXTRA: 2
 };
 
+const CARD_PROPERTIES = [
+  {name: `title`, value: `Incredibles 2`},
+  {name: `rating`, value: `9.8`},
+  {name: `year`, value: 2018},
+  {name: `duration`, value: `1h 13m`},
+  {name: `genre`, value: `Comedy`},
+  {name: `poster`, value: `./images/posters/accused.jpg`},
+  {name: `comments`, value: `13 comments`}
+];
+
 const FILTERS_NAMES = [`All movies`, `Watchlist`, `History`, `Favorites`];
 
 /**
@@ -42,7 +52,7 @@ const getRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)
  */
 const renderCards = (number, container, hasControls) => {
   const fragment = document.createDocumentFragment();
-  const cards = [...new Array(number)].map(() => createCard(hasControls));
+  const cards = [...new Array(number)].map(() => createCard(CARD_PROPERTIES, hasControls));
   cards.forEach((card) => {
     fragment.appendChild(card);
   });
