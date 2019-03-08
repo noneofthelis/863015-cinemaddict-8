@@ -76,8 +76,10 @@ const renderFilters = (items) => {
  * @param {MouseEvent} evt
  */
 const toggleFilter = (evt) => {
-  filtersContainer.querySelector(`.main-navigation__item--active`).className = `main-navigation__item`;
-  evt.target.className = `main-navigation__item main-navigation__item--active`;
+  if (evt.target.classList.contains(`main-navigation__item`)) {
+    filtersContainer.querySelector(`.main-navigation__item--active`).classList.remove(`main-navigation__item--active`);
+    evt.target.classList.add(`main-navigation__item--active`);
+  }
 };
 
 /**
