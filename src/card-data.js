@@ -2,9 +2,23 @@
 
 import getRandomNumber from './utils.js';
 
+const MAX_RATING = 10;
+const MAX_MINUTES = 59;
+const FIRST_ELEM_INDEX = 0;
+
+const FilmHours = {
+  MIN: 1,
+  MAX: 3
+};
+
 const SentencesNum = {
   MIN: 1,
   MAX: 3
+};
+
+const commentsNum = {
+  MIN: 0,
+  MAX: 150
 };
 
 export default {
@@ -40,13 +54,13 @@ export default {
     `In rutrum ac purus sit amet tempus.`],
   images: [`accused`, `blackmail`, `blue-blazes`, `fuga-da-new-york`, `moonrise`, `three-friends`],
   get title() {
-    return this.titles[getRandomNumber(0, 16)];
+    return this.titles[getRandomNumber(FIRST_ELEM_INDEX, this.titles.length - 1)];
   },
   get description() {
     const sentences = [];
     const randomNumber = getRandomNumber(SentencesNum.MIN, SentencesNum.MAX);
     while (sentences.length < randomNumber) {
-      const randomEl = this.descriptions[getRandomNumber(0, this.descriptions.length - 1)];
+      const randomEl = this.descriptions[getRandomNumber(FIRST_ELEM_INDEX, this.descriptions.length - 1)];
       if (!sentences.includes(randomEl)) {
         sentences.push(randomEl);
       }
@@ -54,27 +68,26 @@ export default {
     return sentences.join(` `);
   },
   get rating() {
-    return (Math.random() * 10).toFixed(2, 10);
+    return (Math.random() * MAX_RATING).toFixed(2, 10);
   },
   get genre() {
-    return this.genres[getRandomNumber(0, 6)];
+    return this.genres[getRandomNumber(FIRST_ELEM_INDEX, this.genres.length - 1)];
   },
   get year() {
-    return this.years[getRandomNumber(0, 6)];
+    return this.years[getRandomNumber(FIRST_ELEM_INDEX, this.years.length - 1)];
   },
   get duration() {
-    let minutes = getRandomNumber(0, 59);
+    let minutes = getRandomNumber(0, MAX_MINUTES);
     if (minutes < 10) {
-      minutes = `0` + minutes;
+      minutes = `0${minutes}`;
     }
-    return `${getRandomNumber(1, 3)} h. ${minutes} m.`;
+    return `${getRandomNumber(FilmHours.MIN, FilmHours.MAX)} h. ${minutes} m.`;
   },
   get comments() {
-    const number = getRandomNumber(0, 150);
+    const number = getRandomNumber(commentsNum.MIN, commentsNum.MAX);
     return number === 1 ? `${number} comment` : `${number} comments`;
   },
   get imageUrl() {
-    return `../public/images/posters/${this.images[getRandomNumber(0, 5)]}.jpg`;
+    return `../public/images/posters/${this.images[getRandomNumber(FIRST_ELEM_INDEX, this.images.length - 1)]}.jpg`;
   }
 };
-

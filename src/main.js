@@ -40,11 +40,12 @@ const FILTERS_NAMES = [`All movies`, `Watchlist`, `History`, `Favorites`];
  * inserts the resulting nodes (cards) into the DOM tree
  * @param {number} number
  * @param {Node} container
+ * @param {Array} properties
  * @param {boolean} hasControls
  */
-const renderCards = (number, container, hasControls) => {
+const renderCards = (number, container, properties, hasControls) => {
   const fragment = document.createDocumentFragment();
-  const cards = [...new Array(number)].map(() => createCard(cardData, PROPERTIES, hasControls));
+  const cards = [...new Array(number)].map(() => createCard(cardData, properties, hasControls));
   cards.forEach((card) => {
     fragment.appendChild(card);
   });
@@ -81,9 +82,9 @@ const refreshCards = () => {
   mainCardsContainer.innerHTML = ``;
   mostRated.innerHTML = ``;
   mostCommented.innerHTML = ``;
-  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mainCardsContainer, true);
-  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mostRated, false);
-  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mostCommented, false);
+  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mainCardsContainer, PROPERTIES, true);
+  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mostRated, PROPERTIES, false);
+  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mostCommented, PROPERTIES, false);
 };
 
 const onFilterClick = (evt) => {
@@ -104,6 +105,6 @@ filtersContainer.addEventListener(`click`, onFilterClick);
 filtersContainer.addEventListener(`keypress`, onFilterPress);
 
 renderFilters(FILTERS_NAMES);
-renderCards(CardsNumber.MAIN, mainCardsContainer, true);
-renderCards(CardsNumber.EXTRA, mostRated, false);
-renderCards(CardsNumber.EXTRA, mostCommented, false);
+renderCards(CardsNumber.MAIN, mainCardsContainer, PROPERTIES, true);
+renderCards(CardsNumber.EXTRA, mostRated, PROPERTIES, false);
+renderCards(CardsNumber.EXTRA, mostCommented, PROPERTIES, false);
