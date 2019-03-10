@@ -88,6 +88,6 @@ export default {
     return number === 1 ? `${number} comment` : `${number} comments`;
   },
   get imageUrl() {
-    return `../public/images/posters/${this.images[getRandomNumber(FIRST_ELEM_INDEX, this.images.length - 1)]}.jpg`;
+    return `./images/posters/${this.images[getRandomNumber(FIRST_ELEM_INDEX, this.images.length - 1)]}.jpg`;
   }
 };
