@@ -12,11 +12,23 @@ export default class Card {
     this._year = data.year;
 
     this._hasControls = hasControls;
+    this._onCommentsClick = this._onCommentsClick.bind(this);
     this._element = null;
+    this._onClick = null;
+  }
+
+  _onCommentsClick() {
+    return typeof this._onClick === `function` && this._onClick();
+  }
+
+  _addListener() {
+    this._element.querySelector(`.film-card__comments`)
+      .addEventListener(`click`, this._onCommentsClick);
   }
 
   render() {
     this._element = this.template;
+    this._addListener();
     return this._element;
   }
 
@@ -44,5 +56,9 @@ export default class Card {
     }
 
     return template;
+  }
+
+  set onClick(fn) {
+    this._onClick = fn;
   }
 }

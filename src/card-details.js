@@ -9,6 +9,34 @@ export default class CardDetails {
     this._title = data.title;
 
     this._element = null;
+    this._onClick = null;
+    this._onCloseBtnClick = this._onCloseBtnClick.bind(this);
+  }
+
+  _onCloseBtnClick() {
+    return typeof this._onClick === `function` && this._onClick();
+  }
+
+  _addListener() {
+    this._element.querySelector(`.film-details__close-btn`)
+      .addEventListener(`click`, this._onCloseBtnClick);
+  }
+
+  _removeListener() {
+    this._element.querySelector(`.film-details__close-btn`)
+      .removeEventListener(`click`, this._onCloseBtnClick);
+  }
+
+  render() {
+    this._element = this.template;
+    this._addListener();
+    return this._element;
+  }
+
+  removeElement() {
+    this._removeListener();
+    this._element.remove();
+    this._element = null;
   }
 
   get template() {
@@ -26,8 +54,7 @@ export default class CardDetails {
     return template;
   }
 
-  render() {
-    this._element = this.template;
-    return this._element;
+  set onClick(fn) {
+    this._onClick = fn;
   }
 }

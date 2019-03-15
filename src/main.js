@@ -59,6 +59,9 @@ const renderCards = (number, container, data, hasControls) => {
  */
 const renderCard = (container, data, hasControls) => {
   const card = new Card(data, hasControls);
+  card.onClick = () => {
+    renderPopup(document.body, data);
+  };
   container.appendChild(card.render());
 };
 
@@ -69,6 +72,9 @@ const renderCard = (container, data, hasControls) => {
  */
 const renderPopup = (container, data) => {
   const popup = new CardDetails(data);
+  popup.onClick = () => {
+    popup.removeElement();
+  };
   container.appendChild(popup.render());
 };
 
@@ -125,7 +131,6 @@ filtersContainer.addEventListener(`click`, onFilterClick);
 filtersContainer.addEventListener(`keypress`, onFilterPress);
 
 renderFilters(FILTERS_NAMES);
-renderPopup(document.body, cardData);
 renderCards(CardsNumber.MAIN, mainCardsContainer, cardData, true);
 renderCards(CardsNumber.EXTRA, mostRated, cardData);
 renderCards(CardsNumber.EXTRA, mostCommented, cardData);
