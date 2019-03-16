@@ -1,7 +1,8 @@
 import createFilter from './create-filter.js';
-import createCard from './create-card.js';
 import cardData from './card-data.js';
-import getRandomNumber from './utils.js';
+import CardDetails from './card-details.js';
+import Card from './card.js';
+import util from './utils.js';
 
 const filtersContainer = document.querySelector(`.main-navigation`);
 const CardsContainer = document.querySelector(`.films`);
@@ -37,19 +38,44 @@ const PROPERTIES = [`title`,
 const FILTERS_NAMES = [`All movies`, `Watchlist`, `History`, `Favorites`];
 
 /**
- * inserts the resulting nodes (cards) into the DOM tree
+ * renders certain number of cards
  * @param {number} number
  * @param {Node} container
- * @param {Array} properties
+ * @param {Object} data
+ * @param {boolean} hasControls
+ * @return {Node}
+ */
+const renderCards = (number, container, data, hasControls) => {
+  return [...new Array(number)].map(() => {
+    renderCard(container, data, hasControls);
+  });
+};
+
+/**
+ * inserts the resulting node (card) into the DOM tree
+ * @param {Node} container
+ * @param {Object} data
  * @param {boolean} hasControls
  */
-const renderCards = (number, container, properties, hasControls) => {
-  const fragment = document.createDocumentFragment();
-  const cards = [...new Array(number)].map(() => createCard(cardData, properties, hasControls));
-  cards.forEach((card) => {
-    fragment.appendChild(card);
-  });
-  container.appendChild(fragment);
+const renderCard = (container, data, hasControls) => {
+  const card = new Card(data, hasControls);
+  card.onClick = () => {
+    renderPopup(document.body, data);
+  };
+  container.appendChild(card.render());
+};
+
+/**
+ * inserts the resulting node (popup) into the DOM tree
+ * @param {Node} container
+ * @param {Object} data
+ */
+const renderPopup = (container, data) => {
+  const popup = new CardDetails(data);
+  popup.onClick = () => {
+    popup.removeElement();
+  };
+  container.appendChild(popup.render());
 };
 
 /**
@@ -59,7 +85,7 @@ const renderCards = (number, container, properties, hasControls) => {
 const renderFilters = (items) => {
   const fragment = document.createDocumentFragment();
   items.forEach((item) => {
-    fragment.appendChild(createFilter(item, getRandomNumber(FilterInterval.MIN, FilterInterval.MAX)));
+    fragment.appendChild(createFilter(item, util.getRandomNumber(FilterInterval.MIN, FilterInterval.MAX)));
   });
   filtersContainer.appendChild(fragment);
 };
@@ -82,9 +108,9 @@ const refreshCards = () => {
   mainCardsContainer.innerHTML = ``;
   mostRated.innerHTML = ``;
   mostCommented.innerHTML = ``;
-  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mainCardsContainer, PROPERTIES, true);
-  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mostRated, PROPERTIES, false);
-  renderCards(getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mostCommented, PROPERTIES, false);
+  renderCards(util.getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mainCardsContainer, PROPERTIES, true);
+  renderCards(util.getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mostRated, PROPERTIES, false);
+  renderCards(util.getRandomNumber(CardsInterval.MIN, CardsInterval.MAX), mostCommented, PROPERTIES, false);
 };
 
 const onFilterClick = (evt) => {
@@ -105,6 +131,6 @@ filtersContainer.addEventListener(`click`, onFilterClick);
 filtersContainer.addEventListener(`keypress`, onFilterPress);
 
 renderFilters(FILTERS_NAMES);
-renderCards(CardsNumber.MAIN, mainCardsContainer, PROPERTIES, true);
-renderCards(CardsNumber.EXTRA, mostRated, PROPERTIES, false);
-renderCards(CardsNumber.EXTRA, mostCommented, PROPERTIES, false);
+renderCards(CardsNumber.MAIN, mainCardsContainer, cardData, true);
+renderCards(CardsNumber.EXTRA, mostRated, cardData);
+renderCards(CardsNumber.EXTRA, mostCommented, cardData);
