@@ -1,7 +1,10 @@
 /** @module ./card */
 
-export default class Card {
+import Component from './component.js';
+
+export default class Card extends Component {
   constructor(data, hasControls = false) {
+    super();
     this._comments = data.comments;
     this._description = data.description;
     this._duration = data.duration;
@@ -13,7 +16,6 @@ export default class Card {
 
     this._hasControls = hasControls;
     this._onCommentsClick = this._onCommentsClick.bind(this);
-    this._element = null;
     this._onClick = null;
   }
 
@@ -24,12 +26,6 @@ export default class Card {
   _addListener() {
     this._element.querySelector(`.film-card__comments`)
       .addEventListener(`click`, this._onCommentsClick);
-  }
-
-  render() {
-    this._element = this.template;
-    this._addListener();
-    return this._element;
   }
 
   get template() {

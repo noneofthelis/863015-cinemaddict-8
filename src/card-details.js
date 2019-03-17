@@ -1,14 +1,16 @@
 /** @module ./card */
 
-export default class CardDetails {
+import Component from './component.js';
+
+export default class CardDetails extends Component {
   constructor(data) {
+    super();
     this._description = data.description;
     this._genre = data.genre;
     this._poster = data.imageUrl;
     this._rating = data.rating;
     this._title = data.title;
 
-    this._element = null;
     this._onClick = null;
     this._onCloseBtnClick = this._onCloseBtnClick.bind(this);
   }
@@ -25,12 +27,6 @@ export default class CardDetails {
   _removeListener() {
     this._element.querySelector(`.film-details__close-btn`)
       .removeEventListener(`click`, this._onCloseBtnClick);
-  }
-
-  render() {
-    this._element = this.template;
-    this._addListener();
-    return this._element;
   }
 
   removeElement() {
