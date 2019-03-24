@@ -72,7 +72,7 @@ const renderCard = (container, data, hasControls) => {
  */
 const renderPopup = (container, data) => {
   const popup = new CardDetails(data);
-  popup.onClick = () => {
+  popup.onClose = () => {
     popup.removeElement();
   };
   container.appendChild(popup.render());

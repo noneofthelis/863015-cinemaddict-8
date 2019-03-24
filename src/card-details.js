@@ -13,20 +13,38 @@ export default class CardDetails extends Component {
 
     this._onClick = null;
     this._onCloseBtnClick = this._onCloseBtnClick.bind(this);
+    this._onRatingClick = this._onRatingClick.bind(this);
+    this._onCommentPress = this._onCommentPress.bind(this);
   }
 
   _onCloseBtnClick() {
-    return typeof this._onClick === `function` && this._onClick();
+    return typeof this._onClose === `function` && this._onClose();
+  }
+
+  _onRatingClick() {
+
+  }
+
+  _onCommentPress() { // комментарий
+
   }
 
   _addListener() {
     this._element.querySelector(`.film-details__close-btn`)
       .addEventListener(`click`, this._onCloseBtnClick);
+    this._element.querySelector(`.film-details__user-rating-score`)
+      .addEventListener(`click`, this._onRatingClick);
+    this._element.querySelector(`.film-details__comment-input`)
+      .addEventListener(`keypress`, this._onCommentPress);
   }
 
   _removeListener() {
     this._element.querySelector(`.film-details__close-btn`)
       .removeEventListener(`click`, this._onCloseBtnClick);
+    this._element.querySelector(`.film-details__user-rating-score`)
+      .removeEventListener(`click`, this._onRatingClick);
+    this._element.querySelector(`.film-details__comment-input`)
+      .removeEventListener(`keypress`, this._onCommentPress);
   }
 
   removeElement() {
@@ -50,7 +68,7 @@ export default class CardDetails extends Component {
     return template;
   }
 
-  set onClick(fn) {
-    this._onClick = fn;
+  set onClose(fn) {
+    this._onClose = fn;
   }
 }
