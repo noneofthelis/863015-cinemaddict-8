@@ -10,8 +10,14 @@ export default class CardDetails extends Component {
     this._poster = data.imageUrl;
     this._rating = data.rating;
     this._title = data.title;
+    this._comments = data.comments;
+    this._userData = {
+      rating: null,
+      comment: null
+    };
 
-    this._onClick = null;
+    this._onClose = null;
+    this._onUpdate = null;
     this._onCloseBtnClick = this._onCloseBtnClick.bind(this);
     this._onRatingClick = this._onRatingClick.bind(this);
     this._onCommentPress = this._onCommentPress.bind(this);
@@ -21,8 +27,14 @@ export default class CardDetails extends Component {
     return typeof this._onClose === `function` && this._onClose();
   }
 
-  _onRatingClick() {
-
+  _onRatingClick(evt) {
+    if (evt.target.tagName === `INPUT`) {
+      const newData = this._getData();
+      if (typeof this._onUpdate === `function`) {
+        this._onUpdate(newData);
+      }
+      this._userData = data.userData;
+    }
   }
 
   _onCommentPress() { // комментарий
@@ -53,6 +65,41 @@ export default class CardDetails extends Component {
     this._element = null;
   }
 
+  _getData() {
+    const formData = new FormData(this._element.querySelector(`.film-details__inner`));
+    return CardDetails._processForm(formData);
+  }
+
+  static _processForm(formData) {
+    const entry = {
+      userData: {
+        rating: null,
+        comment: null
+      }
+    };
+
+    const CardDetailsMapper = CardDetails.createMapper(entry);
+
+    for (const pair of formData.entries()) {
+      const [property, value] = pair;
+      if (CardDetailsMapper[property]) {
+        CardDetailsMapper[property](value);
+      }
+    }
+    return entry;
+  }
+
+  static createMapper(target) {
+    return {
+      comment: (value)=> {
+        target.userData.comment = value;
+      },
+      score: (value) => {
+        target.userData.rating = value;
+      },
+    };
+  }
+
   get template() {
     const template = document.querySelector(`#details-template`)
       .content.cloneNode(true).querySelector(`.film-details`);
@@ -61,6 +108,7 @@ export default class CardDetails extends Component {
     template.querySelector(`.film-details__total-rating`).textContent = this._rating;
     template.querySelector(`.film-details__title`).textContent = this._title;
     template.querySelector(`.film-details__user-rating-title`).textContent = this._title;
+    template.querySelector(`.film-details__comments-count`).textContent = this._comments;
 
     template.querySelector(`.film-details__genre`).textContent = this._genre;
     template.querySelector(`.film-details__film-description`).textContent = this._description;
@@ -70,5 +118,9 @@ export default class CardDetails extends Component {
 
   set onClose(fn) {
     this._onClose = fn;
+  }
+
+  set onUpdate(fn) {
+    this._onUpdate = fn;
   }
 }

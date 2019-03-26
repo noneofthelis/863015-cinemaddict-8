@@ -47,35 +47,46 @@ const FILTERS_NAMES = [`All movies`, `Watchlist`, `History`, `Favorites`];
  */
 const renderCards = (number, container, data, hasControls) => {
   return [...new Array(number)].map(() => {
-    renderCard(container, data, hasControls);
+    const card = createCard(data, hasControls);
+    const popup = createPopup(container, data);
+    appendElement(container, card);
+    appendElement(container, popup);
+    setHandlers(data, card, popup);
   });
 };
 
 /**
  * inserts the resulting node (card) into the DOM tree
- * @param {Node} container
  * @param {Object} data
  * @param {boolean} hasControls
+ * @return {Node}
  */
-const renderCard = (container, data, hasControls) => {
-  const card = new Card(data, hasControls);
-  card.onClick = () => {
-    renderPopup(document.body, data);
-  };
-  container.appendChild(card.render());
+const createCard = (data, hasControls) => {
+  return new Card(data, hasControls);
 };
 
 /**
  * inserts the resulting node (popup) into the DOM tree
- * @param {Node} container
  * @param {Object} data
+ *  @return {Node}
  */
-const renderPopup = (container, data) => {
-  const popup = new CardDetails(data);
+const createPopup = (data) => {
+  return new CardDetails(data);
+};
+
+const appendElement = (container, element) => {
+  container.appendChild(element);
+};
+
+const setHandlers = (data, card, popup) => {
+  card.onClick = () => {
+    createPopup(document.body, data);
+  };
   popup.onClose = () => {
     popup.removeElement();
   };
-  container.appendChild(popup.render());
+  popup.onUpdate = () => {
+  };
 };
 
 /**
