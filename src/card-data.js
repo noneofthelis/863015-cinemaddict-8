@@ -53,6 +53,15 @@ export default {
     `Nunc fermentum tortor ac porta dapibus.`,
     `In rutrum ac purus sit amet tempus.`],
   images: [`accused`, `blackmail`, `blue-blazes`, `fuga-da-new-york`, `moonrise`, `three-friends`],
+  comments: [
+    {
+      author: `Tim Macoveev`,
+      timestamp: `3 days ago`,
+      text: `So long-long story, boring!`,
+      emoji: `sleeping`,
+      removable: false
+    }
+  ],
   get title() {
     return this.titles[util.getRandomNumber(FIRST_ELEM_INDEX, this.titles.length - 1)];
   },
@@ -83,7 +92,7 @@ export default {
     }
     return `${util.getRandomNumber(FilmHours.MIN, FilmHours.MAX)} h. ${minutes} m.`;
   },
-  get comments() {
+  get commentsNumber() {
     const number = util.getRandomNumber(commentsNum.MIN, commentsNum.MAX);
     return number === 1 ? `${number} comment` : `${number} comments`;
   },

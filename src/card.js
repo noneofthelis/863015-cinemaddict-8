@@ -5,7 +5,7 @@ import Component from './component.js';
 export default class Card extends Component {
   constructor(data, hasControls = false) {
     super();
-    this._comments = data.comments;
+    this._commentsNumber = data.commentsNumber;
     this._description = data.description;
     this._duration = data.duration;
     this._genre = data.genre;
@@ -23,9 +23,14 @@ export default class Card extends Component {
     return typeof this._onClick === `function` && this._onClick();
   }
 
-  _addListener() {
+  _addListeners() {
     this._element.querySelector(`.film-card__comments`)
       .addEventListener(`click`, this._onCommentsClick);
+  }
+
+  _removeListeners() {
+    this._element.querySelector(`.film-card__comments`)
+      .removeEventListener(`click`, this._onCommentsClick);
   }
 
   get template() {
@@ -34,7 +39,7 @@ export default class Card extends Component {
     const poster = template.querySelector(`img`);
     poster.src = this._poster;
 
-    template.querySelector(`.film-card__comments`).textContent = this._comments;
+    template.querySelector(`.film-card__comments`).textContent = this._commentsNumber;
     template.querySelector(`.film-card__duration`).textContent = this._duration;
     template.querySelector(`.film-card__genre`).textContent = this._genre;
     template.querySelector(`.film-card__rating`).textContent = this._rating;

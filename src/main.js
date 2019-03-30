@@ -23,7 +23,7 @@ const CardsInterval = {
 };
 
 const CardsNumber = {
-  MAIN: 7,
+  MAIN: 5,
   EXTRA: 2
 };
 
@@ -45,48 +45,56 @@ const FILTERS_NAMES = [`All movies`, `Watchlist`, `History`, `Favorites`];
  * @param {boolean} hasControls
  * @return {Node}
  */
+
 const renderCards = (number, container, data, hasControls) => {
   return [...new Array(number)].map(() => {
-    const card = createCard(data, hasControls);
-    const popup = createPopup(container, data);
-    appendElement(container, card);
-    appendElement(container, popup);
-    setHandlers(data, card, popup);
+    renderCard(container, data, hasControls);
   });
-};
-
-/**
- * inserts the resulting node (card) into the DOM tree
- * @param {Object} data
- * @param {boolean} hasControls
- * @return {Node}
- */
-const createCard = (data, hasControls) => {
-  return new Card(data, hasControls);
-};
-
-/**
- * inserts the resulting node (popup) into the DOM tree
- * @param {Object} data
- *  @return {Node}
- */
-const createPopup = (data) => {
-  return new CardDetails(data);
 };
 
 const appendElement = (container, element) => {
   container.appendChild(element);
 };
 
-const setHandlers = (data, card, popup) => {
+/**
+* inserts the resulting node (card) into the DOM tree
+* @param {Node} container
+* @param {Object} data
+* @param {boolean} hasControls
+*/
+const renderCard = (container, data, hasControls) => {
+  const card = createCard(data, hasControls);
+  appendElement(container, card.render());
+};
+
+const createCard = (data, hasControls) => {
+  const card = new Card(data, hasControls);
+  const popup = createPopup(data, card);
+
   card.onClick = () => {
-    createPopup(document.body, data);
+    renderPopup(popup);
   };
+  return card;
+};
+
+/**
+ * inserts the resulting node (popup) into the DOM tree
+ * @param {Object} popup
+ */
+const renderPopup = (popup) => {
+  appendElement(document.body, popup.render());
+};
+
+const createPopup = (data, card) => {
+  const popup = new CardDetails(data);
   popup.onClose = () => {
     popup.removeElement();
   };
-  popup.onUpdate = () => {
+  popup.onUpdate = (newObject) => {
+    data.userData = newObject;
+    card.updateUserData(data.userData);
   };
+  return popup;
 };
 
 /**
