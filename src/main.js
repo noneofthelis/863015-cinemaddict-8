@@ -91,8 +91,12 @@ const createPopup = (data, card) => {
     popup.removeElement();
   };
   popup.onUpdate = (newObject) => {
+    // console.log(data, newObject, popup);
     data.userData = newObject;
     card.updateUserData(data.userData);
+  };
+  popup.onCommentAdd = (number) => {
+    card.updateCommentsNumber(number);
   };
   return popup;
 };

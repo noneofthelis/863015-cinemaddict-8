@@ -103,7 +103,7 @@
 
             <div class="film-details__rating">
               <p class="film-details__total-rating">5.2</p>
-              <p class="film-details__user-rating">Your rate 8</p>
+              <p class="film-details__user-rating">Rate this film!</p>
             </div>
           </div>
 
@@ -162,17 +162,7 @@
       <section class="film-details__comments-wrap">
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">1</span></h3>
 
-        <ul class="film-details__comments-list">
-          <li class="film-details__comment">
-            <span class="film-details__comment-emoji">😴</span>
-            <div>
-              <p class="film-details__comment-text">So long-long story, boring!</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">Tim Macoveev</span>
-                <span class="film-details__comment-day">3 days ago</span>
-              </p>
-            </div>
-          </li>
+        <ul class="film-details__user-rating-controls">
         </ul>
 
         <div class="film-details__new-comment">
@@ -240,7 +230,6 @@
 
               <input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="9" id="rating-9">
               <label class="film-details__user-rating-label" for="rating-9">9</label>
-
             </div>
           </section>
         </div>
@@ -248,7 +237,19 @@
     </form>
   </section>
 </template>
-<!--<script src="./bundle.js"></script>-->
-<script src="../src/main.js" type="module"></script>
+<template id="comment-template">
+  <li class="film-details__comment">
+    <span class="film-details__comment-emoji">😴</span>
+    <div>
+      <p class="film-details__comment-text">So long-long story, boring!</p>
+      <p class="film-details__comment-info">
+        <span class="film-details__comment-author">You</span>
+        <span class="film-details__comment-day">3 days ago</span>
+      </p>
+    </div>
+  </li>
+</template>
+<script src="./bundle.js"></script>
+<!--<script src="../src/main.js" type="module"></script>-->
 </body>
 </html>

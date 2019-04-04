@@ -2,13 +2,18 @@
 
 import Component from './component.js';
 
+import moment from 'moment';
+
 const EmojiDict = {
   'neutral-face': `😐`,
   'sleeping': `😴`,
   'grinning': `😀`
 };
 
-// отдельно рейтинг на клик и отдельно коммент на ктр энтер
+const KeyCode = {
+  ENTER: 13,
+  CTRL: 17
+};
 
 export default class CardDetails extends Component {
   constructor(data) {
@@ -18,14 +23,15 @@ export default class CardDetails extends Component {
     this._poster = data.imageUrl;
     this._rating = data.rating;
     this._title = data.title;
-    this._comments = data.comments;
+    this._comments = [...data.comments];
     this._commentsNumber = data.commentsNumber;
 
     this._onClose = null;
     this._onUpdate = null;
+    this._onCommentAdd = null;
     this._onCloseBtnClick = this._onCloseBtnClick.bind(this);
     this._onRatingClick = this._onRatingClick.bind(this);
-    this._onCommentPress = this._onCommentPress.bind(this);
+    this._onCommentSubmit = this._onCommentSubmit.bind(this);
   }
 
   _onCloseBtnClick() {
@@ -33,22 +39,25 @@ export default class CardDetails extends Component {
   }
 
   _onRatingClick(evt) {
-    if (evt.target.tagName === `INPUT`) {
+    console.log(this, this._comments);
+    if (evt.target.tagName === `INPUT`) { // убрать любое взаиможействие с комментом
       const newData = this._getData();
       if (typeof this._onUpdate === `function`) {
-      this._onUpdate(newData);
+        this._onUpdate(newData);
       }
-      // debugger;
       this.updateUserData(newData);
-      this._rerenderUserData(newData);
-      console.log(this);
+      this._updateRating(newData);
     }
   }
 
-  _onCommentPress() { // комментарий
-    // if (typeof this._onUpdate === `function`) {
-    // this._onUpdate(newData);
-    // }
+  _onCommentSubmit(evt) { // комментарий
+    if (evt.keyCode === KeyCode.ENTER) {
+      const newData = this._getData();
+      this._updateComments(newData);
+      if (typeof this._onCommentAdd === `function`) {
+        this._onCommentAdd(this._commentsNumber);
+      }
+    }
   }
 
   _addListeners() {
@@ -57,7 +66,7 @@ export default class CardDetails extends Component {
     this._element.querySelector(`.film-details__user-rating-score`)
       .addEventListener(`click`, this._onRatingClick);
     this._element.querySelector(`.film-details__comment-input`)
-      .addEventListener(`keypress`, this._onCommentPress);
+      .addEventListener(`keypress`, this._onCommentSubmit);
   }
 
   _removeListeners() {
@@ -74,19 +83,27 @@ export default class CardDetails extends Component {
     return CardDetails._processForm(formData);
   }
 
-  _rerenderUserData(data) {
-    // console.log(data);
-    document.querySelector(`.film-details__user-rating`).textContent = `Your rate ${data.rating}`;
-    // console.log(data.comment.text);
+  _updateComments(data) {
     if (data.comment.text) {
-      this._comments++;
-      this._createComment(data);
+      this._commentsNumber++;
+      this._renderCommentsNumber(this._commentsNumber);
+      this._comments.push(data.comment);
+      this._createComment(data.comment);
     }
   }
 
+  _renderCommentsNumber(number) {
+    document.querySelector(`.film-details__comments-count`).textContent = number;
+  }
+
+  _updateRating(data) {
+    document.querySelector(`.film-details__user-rating`).textContent = `Your rate ${data.rating}`;
+  }
+
   _createComment(data) {
-    const container = document.querySelector(`.film-details__comments-list`);
-    document.appendChild(container, CardDetails._getCommentTemplate(data));
+    // console.log(data);
+    const container = document.querySelector(`.film-details__user-rating-controls`);
+    container.insertAdjacentElement(`beforeend`, CardDetails._getCommentTemplate(data));
   }
 
   static _processForm(formData) {
@@ -127,7 +144,7 @@ export default class CardDetails extends Component {
   get template() {
     const template = document.querySelector(`#details-template`)
       .content.cloneNode(true).querySelector(`.film-details`);
-    const commentsList = template.querySelector(`.film-details__comments-list`);
+    const commentsList = template.querySelector(`.film-details__user-rating-controls`);
     template.querySelector(`.film-details__poster`).src = this._poster;
 
     template.querySelector(`.film-details__total-rating`).textContent = this._rating;
@@ -142,10 +159,13 @@ export default class CardDetails extends Component {
       template.querySelector(`.film-details__user-rating`).textContent = `Your rate ${this._userData.rating}`;
     }
 
-    /* for (const number of this._comments) {
-      const comment = CardDetails._getCommentTemplate(this._comments[number]);
+    // console.log(this._comments);
+    for (const number of this._comments) {
+      // console.log(this._comments, number);
+      const comment = CardDetails._getCommentTemplate(number);
+      // console.log(comment);
       commentsList.insertAdjacentElement(`beforeend`, comment);
-    }*/
+    }
 
     return template;
   }
@@ -153,10 +173,12 @@ export default class CardDetails extends Component {
   static _getCommentTemplate(data) {
     const template = document.querySelector(`#comment-template`)
       .content.cloneNode(true).querySelector(`.film-details__comment`);
+   // console.log(typeof data.timestamp, data.timestamp);
+    const momento = moment(data.timestamp).fromNow();
 
     template.querySelector(`.film-details__comment-author`).textContent = data.author;
     template.querySelector(`.film-details__comment-text`).textContent = data.text;
-    template.querySelector(`.film-details__comment-day`).textContent = data.timestamp;
+    template.querySelector(`.film-details__comment-day`).textContent = momento;
     template.querySelector(`.film-details__comment-emoji`).textContent = EmojiDict[data.emoji];
 
     return template;
@@ -168,5 +190,9 @@ export default class CardDetails extends Component {
 
   set onUpdate(fn) {
     this._onUpdate = fn;
+  }
+
+  set onCommentAdd(fn) {
+    this._onCommentAdd = fn;
   }
 }

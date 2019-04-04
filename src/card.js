@@ -39,12 +39,15 @@ export default class Card extends Component {
     const poster = template.querySelector(`img`);
     poster.src = this._poster;
 
-    template.querySelector(`.film-card__comments`).textContent = this._commentsNumber;
+    template.querySelector(`.film-card__comments`).textContent = this._commentsNumber
+    === 1 ? `${this._commentsNumber} comment`
+      : `${this._commentsNumber} comments`;
     template.querySelector(`.film-card__duration`).textContent = this._duration;
     template.querySelector(`.film-card__genre`).textContent = this._genre;
     template.querySelector(`.film-card__rating`).textContent = this._rating;
     template.querySelector(`.film-card__title`).textContent = this._title;
     template.querySelector(`.film-card__year`).textContent = this._year;
+    template.dataset.id = `${this._title} ${this._year}`;
 
     if (this._hasControls) {
       const controls = document.querySelector(`#card-controls-template`).content.cloneNode(true);
@@ -57,6 +60,16 @@ export default class Card extends Component {
     }
 
     return template;
+  }
+
+  updateCommentsNumber(number) {
+    this._commentsNumber = number;
+    this._renderCommentsNumber(number);
+  }
+
+  _renderCommentsNumber(number) {
+    document.querySelector(`.film-card__comments`)
+      .textContent = number === 1 ? `${number} comment` : `${number} comments`;
   }
 
   set onClick(fn) {

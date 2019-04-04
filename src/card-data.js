@@ -56,7 +56,7 @@ export default {
   comments: [
     {
       author: `Tim Macoveev`,
-      timestamp: `3 days ago`,
+      timestamp: 1554300516370,
       text: `So long-long story, boring!`,
       emoji: `sleeping`,
       removable: false
@@ -93,8 +93,7 @@ export default {
     return `${util.getRandomNumber(FilmHours.MIN, FilmHours.MAX)} h. ${minutes} m.`;
   },
   get commentsNumber() {
-    const number = util.getRandomNumber(commentsNum.MIN, commentsNum.MAX);
-    return number === 1 ? `${number} comment` : `${number} comments`;
+    return util.getRandomNumber(commentsNum.MIN, commentsNum.MAX);
   },
   get imageUrl() {
     return `./images/posters/${this.images[util.getRandomNumber(FIRST_ELEM_INDEX, this.images.length - 1)]}.jpg`;

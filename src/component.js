@@ -38,6 +38,8 @@ export default class Component {
 
   _removeListeners() {}
 
+  _renderCommentsNumber() {}
+
   get template() {
     throw new Error(`You have to define template.`);
   }
