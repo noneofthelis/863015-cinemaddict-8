@@ -1,22 +1,23 @@
 /** @module ./card */
 
 import Component from './component.js';
+import moment from 'moment';
 
 export default class Card extends Component {
   constructor(data, hasControls = false) {
     super();
     this._commentsNumber = data.commentsNumber;
     this._description = data.description;
-    this._duration = data.duration;
+    this._runtime = data.runtime;
     this._genre = data.genre;
     this._poster = data.imageUrl;
     this._rating = data.rating;
     this._title = data.title;
-    this._year = data.year;
-
+    this._releaseDate = data.releaseDate;
     this._hasControls = hasControls;
-    this._onCommentsClick = this._onCommentsClick.bind(this);
+
     this._onClick = null;
+    this._onCommentsClick = this._onCommentsClick.bind(this);
   }
 
   _onCommentsClick() {
@@ -42,12 +43,12 @@ export default class Card extends Component {
     template.querySelector(`.film-card__comments`).textContent = this._commentsNumber
     === 1 ? `${this._commentsNumber} comment`
       : `${this._commentsNumber} comments`;
-    template.querySelector(`.film-card__duration`).textContent = this._duration;
+    template.querySelector(`.film-card__duration`)
+      .textContent = `${moment.duration(this._runtime, `minutes`).hours()}h ${moment.duration(this._runtime, `minutes`).minutes()}m`;
     template.querySelector(`.film-card__genre`).textContent = this._genre;
     template.querySelector(`.film-card__rating`).textContent = this._rating;
     template.querySelector(`.film-card__title`).textContent = this._title;
-    template.querySelector(`.film-card__year`).textContent = this._year;
-    template.dataset.id = `${this._title} ${this._year}`;
+    template.querySelector(`.film-card__year`).textContent = moment(this._releaseDate).format(`YYYY`);
 
     if (this._hasControls) {
       const controls = document.querySelector(`#card-controls-template`).content.cloneNode(true);

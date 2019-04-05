@@ -52,6 +52,11 @@ const renderCards = (number, container, data, hasControls) => {
   });
 };
 
+/**
+ * appends an element into container
+ * @param {Node} container
+ * @param {Node} element
+ */
 const appendElement = (container, element) => {
   container.appendChild(element);
 };
@@ -67,6 +72,12 @@ const renderCard = (container, data, hasControls) => {
   appendElement(container, card.render());
 };
 
+/**
+ * creates element of class Card and related element of class CardDetails
+ * @param {Object} data
+ * @param {Boolean} hasControls
+ * @return {Card}
+ */
 const createCard = (data, hasControls) => {
   const card = new Card(data, hasControls);
   const popup = createPopup(data, card);
@@ -85,13 +96,18 @@ const renderPopup = (popup) => {
   appendElement(document.body, popup.render());
 };
 
+/**
+ * creates element of class CardDetails
+ * @param {Object} data
+ * @param {Object} card
+ * @return {CardDetails}
+ */
 const createPopup = (data, card) => {
   const popup = new CardDetails(data);
   popup.onClose = () => {
     popup.removeElement();
   };
   popup.onUpdate = (newObject) => {
-    // console.log(data, newObject, popup);
     data.userData = newObject;
     card.updateUserData(data.userData);
   };
